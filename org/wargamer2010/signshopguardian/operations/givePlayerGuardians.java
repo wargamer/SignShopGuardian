@@ -5,8 +5,8 @@ import org.wargamer2010.signshop.configuration.SignShopConfig;
 import org.wargamer2010.signshop.operations.SignShopArguments;
 import org.wargamer2010.signshop.operations.SignShopOperation;
 import org.wargamer2010.signshop.player.SignShopPlayer;
+import org.wargamer2010.signshop.util.signshopUtil;
 import org.wargamer2010.signshopguardian.SignShopGuardian;
-import org.wargamer2010.signshopguardian.util.GuardianUtil;
 
 public class givePlayerGuardians implements SignShopOperation {
     @Override
@@ -16,7 +16,7 @@ public class givePlayerGuardians implements SignShopOperation {
             return false;
         }
 
-        ssArgs.setMessagePart("!guardians", GuardianUtil.getAmountOfGuardians(ssArgs).toString());
+        ssArgs.setMessagePart("!guardians", signshopUtil.getNumberFromLine(ssArgs.getSign().get(), 1).intValue() + "");
         return true;
     }
 
@@ -27,17 +27,17 @@ public class givePlayerGuardians implements SignShopOperation {
             return false;
         }
 
-        ssArgs.setMessagePart("!guardians", GuardianUtil.getAmountOfGuardians(ssArgs).toString());
-        ssArgs.setMessagePart("!currentguardians", GuardianUtil.getPlayerGuardianCount(ssArgs.getPlayer().get()).toString());
+        ssArgs.setMessagePart("!guardians", signshopUtil.getNumberFromLine(ssArgs.getSign().get(), 1).intValue() + "");
+        ssArgs.setMessagePart("!currentguardians", SignShopGuardian.getManager().getGuardians(ssArgs.getPlayer().get().getName()) + "");
         return true;
     }
 
     @Override
     public Boolean runOperation(SignShopArguments ssArgs) {
         SignShopPlayer player = ssArgs.getPlayer().get();
-        Integer totalGuardians = GuardianUtil.incrementPlayerGuardianCounter(player, GuardianUtil.getAmountOfGuardians(ssArgs));
-        ssArgs.setMessagePart("!guardians", GuardianUtil.getAmountOfGuardians(ssArgs).toString());
-        ssArgs.setMessagePart("!currentguardians", totalGuardians.toString());
+        int totalGuardians = SignShopGuardian.getManager().addGuardians(player.getName(), signshopUtil.getNumberFromLine(ssArgs.getSign().get(), 1).intValue());
+        ssArgs.setMessagePart("!guardians", signshopUtil.getNumberFromLine(ssArgs.getSign().get(), 1).intValue() + "");
+        ssArgs.setMessagePart("!currentguardians", totalGuardians + "");
         return true;
     }
 }
